@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crepe Magique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #fffaf7;
+    color: #4b2e2b;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 120px;
+  }
+  header img {
+    height: 140px;
+    width: auto;
+  }
+  button#viewOrdersBtn {
+    background: none;
+    border: none;
+    color: #4b2e2b;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .banner {
+    height: 50vh;
+    background-image: url('images/Banner.png');
+    background-size: cover;
+    background-position: center;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #3a1e1b;
+  }
+  main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 30px 50px;
+  }
+  .menu {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .item {
+    background-color: #fff;
+    border: 1px solid #e0cfc2;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+  }
+  .item:hover { transform: translateY(-3px); }
+  .item img {
+    width: 100%;
+    border-radius: 12px;
+    height: 160px;
+    object-fit: cover;
+  }
+  .item h2 { font-size: 18px; }
+  .item p { font-size: 13px; color: #6a4a42; }
+  .item button {
+    background-color: #c9a07b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .cart {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e0cfc2;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 20px;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fdf8f5;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e0cfc2;
+    margin-bottom: 10px;
+  }
+  .quantity-btn {
+    background-color: #d4b7a2;
+    border: none;
+    border-radius: 6px;
+    color: #4b2e2b;
+    font-weight: bold;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+  }
+  .submit-btn, .clear-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+  .submit-btn { background: #4b2e2b; color: white; }
+  .clear-btn { background: #d4b7a2; color: #4b2e2b; }
+  footer {
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    background-color: #f5e7d8;
+    margin-top: 30px;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    text-align: center;
+  }
+  .rating .star {
+    font-size: 28px;
+    color: #b88;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+  }
+  .rating .star:hover, .rating .star.selected { color: #ffb400; transform: scale(1.2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:15px;">
+    <img src="images/logo.png" alt="Crepe Magique Logo">
+    <h1 style="font-family:'Playfair Display',serif;">Crepe Magique</h1>
+  </div>
+  <button id="viewOrdersBtn">Dashboard (Admins Only)</button>
+</header>
+
+<section class="banner"></section>
+
+<h1>Our Special Menu ❤️</h1>
+
+<main>
+  <div class="menu">
+    <div class="item">
+      <img src="images/menu-1.jpg" alt="French Crepe">
+      <h2>French Crepe – ៛3500</h2>
+      <p>Soft and golden crepe drizzled with rich chocolate and creamy condensed milk.</p>
+      <button onclick="openToppingModal()">Add to Order</button>
+      <span id="crepeStock" style="color:green;font-weight:600;">(Loading...)</span>
+    </div>
+    <div class="item">
+      <img src="images/menu-2.jpg" alt="Buchimgae">
+      <h2>Buchimgae – ៛6000</h2>
+      <p>Crispy Korean-style pancake made with vegetables, pan-fried to perfection.</p>
+      <button onclick="addToCart('Buchimgae',6000)">Add to Order</button>
+      <span id="buchimgaeStock" style="color:green;font-weight:600;">(Loading...)</span>
+    </div>
+  </div>
+
+  <div class="cart">
+    <h2>Your Order</h2>
+    <div id="cartItems"></div>
+    <p><strong>Total: ៛<span id="cartTotal">0</span></strong></p>
+    <input type="text" id="customerName" placeholder="Your Name">
+    <input type="tel" id="customerPhone" placeholder="Phone">
+    <select id="yearSelect">
+      <option value="">Select Year</option>
+      <option>IP Student</option><option>Year 1</option>
+      <option>Year 2</option><option>Year 3</option><option>Year 4</option><option>Staff</option>
+    </select>
+    <select id="pickupTime">
+      <option value="">Pickup Time</option>
+      <option>12:00-1:00pm</option><option>5:00-6:00pm</option>
+    </select>
+    <button class="submit-btn" onclick="submitOrder()">Submit Order</button>
+    <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+    <div id="thankyouBox" style="display:none;color:green;">Thank you! Please pay at the counter.</div>
+  </div>
+</main>
+
+<!-- Topping Modal -->
+<div id="toppingModal" class="modal">
+  <div class="modal-content">
+    <h3>Select Toppings</h3>
+    <div id="toppingOptions">
+      <label><input type="checkbox" value="Chocolate Sauce (៛500)" data-price="500"> Chocolate Sauce</label><br>
+      <label><input type="checkbox" value="Condensed Milk (៛500)" data-price="500"> Condensed Milk</label><br>
+      <label><input type="checkbox" value="Icing Sugar (FREE)" data-price="0"> Icing Sugar</label>
+    </div>
+    <button onclick="confirmToppings()">Add to Cart</button>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="modal">
+  <div class="modal-content">
+    <h3>Rate Us ❤️</h3>
+    <div class="rating" id="ratingStars"></div>
+    <textarea id="reviewComment" placeholder="Leave a comment..."></textarea>
+    <button onclick="submitReview()">Submit Review</button>
+  </div>
+</div>
+
+<footer>
+  <button onclick="openReviewModal()" style="background:#b88;color:white;border:none;padding:8px 12px;border-radius:8px;">Rate us ⭐⭐⭐⭐⭐</button>
+  <div id="avgRatingDisplay"></div>
+  <div id="reviewComments"></div>
+  © 2025 Crepe Magique
+</footer>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB6DxMKy1y28t4xtvw0SMcx3K4pivB7grw",
+    authDomain: "crepe-magique.firebaseapp.com",
+    projectId: "crepe-magique",
+    storageBucket: "crepe-magique.firebasestorage.app",
+    messagingSenderId: "175773010517",
+    appId: "1:175773010517:web:170168816a70efa825a2dc",
+    measurementId: "G-J3S8GPYLMD",
+    databaseURL: "https://crepe-magique-default-rtdb.asia-southeast1.firebasedatabase.app"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let cart = [];
+  let stock = { "French Crepe": 0, "Buchimgae": 0 };
+
+  const stockRef = ref(db, "stock");
+  onValue(stockRef, (snapshot) => {
+    stock = snapshot.val() || stock;
+    document.getElementById("crepeStock").textContent = `(${stock["French Crepe"]} left)`;
+    document.getElementById("buchimgaeStock").textContent = `(${stock["Buchimgae"]} left)`;
+  });
+
+  function openToppingModal() { document.getElementById("toppingModal").style.display = "flex"; }
+  function confirmToppings() {
+    const checks = document.querySelectorAll("#toppingOptions input:checked");
+    const toppings = Array.from(checks).map(c => c.value);
+    const price = 3500 + Array.from(checks).reduce((s,c)=>s+Number(c.dataset.price),0);
+    addToCart("French Crepe", price, toppings);
+    document.getElementById("toppingModal").style.display = "none";
+    checks.forEach(c => c.checked=false);
+  }
+
+  function addToCart(item, price, toppings=[]) {
+    if (stock[item] <= 0) { alert("Sold out!"); return; }
+    const exist = cart.find(i => i.item === item && JSON.stringify(i.toppings)===JSON.stringify(toppings));
+    if (exist) exist.quantity++; else cart.push({item, price, quantity:1, toppings});
+    renderCart();
+  }
+
+  function renderCart() {
+    const div = document.getElementById("cartItems");
+    div.innerHTML = cart.map((i,idx)=>`
+      <div class="cart-item">
+        <div>${i.item}<br><small>${i.toppings.join(", ")}</small></div>
+        <div>៛${i.price}</div>
+        <div><button class="quantity-btn" onclick="changeQty(${idx},-1)">–</button>${i.quantity}<button class="quantity-btn" onclick="changeQty(${idx},1)">+</button></div>
+      </div>`).join("");
+    document.getElementById("cartTotal").textContent = cart.reduce((t,i)=>t+i.price*i.quantity,0);
+  }
+
+  function changeQty(i,delta){
+    cart[i].quantity+=delta;
+    if(cart[i].quantity<=0)cart.splice(i,1);
+    renderCart();
+  }
+
+  window.clearCart=()=>{cart=[];renderCart();}
+
+  window.submitOrder=()=>{
+    const name=document.getElementById("customerName").value.trim();
+    const phone=document.getElementById("customerPhone").value.trim();
+    const year=document.getElementById("yearSelect").value;
+    const pickup=document.getElementById("pickupTime").value;
+    if(!name||!phone||!year||!pickup||cart.length===0){alert("Please complete all fields.");return;}
+    const total=cart.reduce((t,i)=>t+i.price*i.quantity,0);
+    const order={name,phone,year,pickupTime:pickup,total,items:cart,time:new Date().toLocaleString()};
+    push(ref(db,"orders"),order).then(()=>{
+      document.getElementById("thankyouBox").style.display="block";
+      setTimeout(()=>document.getElementById("thankyouBox").style.display="none",3000);
+      cart=[];renderCart();
+    });
+  };
+
+  // Review System
+  const reviewsRef = ref(db, "reviews");
+  let selectedRating = 0;
+  window.openReviewModal=()=>{
+    document.getElementById("reviewModal").style.display="flex";
+    const stars=document.getElementById("ratingStars");
+    stars.innerHTML="";
+    for(let i=1;i<=5;i++){
+      const s=document.createElement("span");
+      s.textContent="★";
+      s.className="star";
+      s.onclick=()=>{selectedRating=i;updateStars();};
+      stars.appendChild(s);
+    }
+  };
+  function updateStars(){
+    document.querySelectorAll("#ratingStars .star").forEach((s,i)=>s.classList.toggle("selected",i<selectedRating));
+  }
+  window.submitReview=()=>{
+    const comment=document.getElementById("reviewComment").value.trim();
+    if(selectedRating===0){alert("Select a rating.");return;}
+    push(reviewsRef,{rating:selectedRating,comment});
+    document.getElementById("reviewModal").style.display="none";
+    document.getElementById("reviewComment").value="";
+  };
+
+  onValue(reviewsRef,(snapshot)=>{
+    const data=snapshot.val();
+    if(!data)return;
+    const arr=Object.values(data);
+    const avg=(arr.reduce((t,r)=>t+r.rating,0)/arr.length).toFixed(1);
+    document.getElementById("avgRatingDisplay").textContent=`Average Rating: ${avg} ⭐ (${arr.length} reviews)`;
+    document.getElementById("reviewComments").innerHTML=arr.map(r=>`<p>⭐ ${r.rating} – ${r.comment}</p>`).join("");
+  });
+
+  document.getElementById("viewOrdersBtn").addEventListener("click",()=>{
+    const pass=prompt("Enter admin password:");
+    if(pass==="Patricia")window.location.href="dashboard.html";
+  });
+</script>
+~~~
